@@ -1,4 +1,5 @@
 import "./globals.css";
+import "@uploadthing/react/styles.css";
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 
