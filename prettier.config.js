@@ -1,5 +1,3 @@
-const tailwind = require("prettier-plugin-tailwindcss")
-
-module.exports ={ 
- plugins: [tailwind()]
-}
+module.exports = {
+  tailwindConfig: "./tailwind.config.js",
+};

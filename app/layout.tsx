@@ -1,5 +1,4 @@
 import "./globals.css";
-import "@uploadthing/react/styles.css";
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 
@@ -16,7 +15,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className="font-rubik">{children}</body>
+        <body className="font-rubik bg-very-light-gray flex flex-col min-h-screen">
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );

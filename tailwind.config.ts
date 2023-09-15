@@ -21,6 +21,11 @@ const config: Config = {
       fontFamily: {
         rubik: '"Rubik"',
       },
+      fontWeight: {
+        regular: "400",
+        bold: "500",
+        extrabold: "700",
+      },
     },
   },
   plugins: [],
