@@ -25,12 +25,7 @@ export const addComment = async ({
   content: string;
 }) => {
   await connectDB();
-  const user = await fetchUser({
-    id: owner,
-    email,
-    name,
-    image: currentUserImage,
-  });
+  const user = await fetchUser(owner);
   const comment = await Comment.create({
     content,
     score,
