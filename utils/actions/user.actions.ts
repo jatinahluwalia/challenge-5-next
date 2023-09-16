@@ -3,7 +3,11 @@
 import User from "../models/user.model";
 import connectDB from "../mongoose";
 
-export const fetchUser = async ({
+export const fetchUser = async (id: string) => {
+  return await User.findOne({ id });
+};
+
+export const addUser = async ({
   id,
   name,
   email,
@@ -15,9 +19,5 @@ export const fetchUser = async ({
   image?: string;
 }) => {
   await connectDB();
-  const user = await User.findOne({ id: id });
-  if (!user) {
-    return await User.create({ id, name, email, image });
-  }
-  return user;
+  return await User.create({ id, name, email, image });
 };
