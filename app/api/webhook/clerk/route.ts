@@ -11,6 +11,11 @@ type Event = {
   type: EventType;
 };
 
+export const GET = () => {
+  if (process.env.NEXT_CLERK_WEBHOOK_SECRET) return NextResponse.json("good");
+  return NextResponse.json("bad");
+};
+
 export const POST = async (request: Request) => {
   const payload = await request.json();
   const header = headers();
