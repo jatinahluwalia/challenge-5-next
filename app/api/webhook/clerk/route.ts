@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { IncomingHttpHeaders } from "http";
 import { NextResponse } from "next/server";
 import { addUser } from "@/utils/actions/user.actions";
+
 type EventType = "user.created";
 
 type Event = {
@@ -41,7 +42,17 @@ export const POST = async (request: Request) => {
   const eventType: EventType = evnt?.type!;
   if (eventType === "user.created") {
     try {
-      await addUser({ id: evnt.data.id as string });
+      if (
+        typeof evnt.data["email_addresses"] === "string" ||
+        typeof evnt.data["email_addresses"] === "number"
+      )
+        return;
+      await addUser({
+        id: evnt.data["id"] as string,
+        name: evnt.data["first_name"] + " " + evnt.data["last_name"],
+        email: evnt.data["email_addresses"][0]["email_address"],
+        image: evnt.data["image_url"] as string,
+      });
 
       return NextResponse.json(
         { message: "Organization deleted" },
