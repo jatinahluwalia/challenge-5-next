@@ -1,4 +1,4 @@
-import connectDB from "@/utils/mongoose.js";
+import connectDB from "@/utils/mongoose";
 import User from "@/utils/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -6,8 +6,6 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const body = await req.json();
-    console.log(body);
-
     const { Name, Email, Image } = body;
 
     if (!Name || !Email || !Image) {

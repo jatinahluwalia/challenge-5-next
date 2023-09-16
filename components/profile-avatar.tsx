@@ -11,7 +11,7 @@ const ProfileAvatar = ({ image }: Props) => {
       alt="image"
       width={50}
       height={50}
-      className="rounded-full object-cover"
+      className="rounded-full object-cover h-max"
     />
   );
 };

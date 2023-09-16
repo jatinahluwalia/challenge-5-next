@@ -1,10 +1,11 @@
-import connectDB from "@/utils/mongoose.js";
-import Comment from "@/utils/models/comment.model.js";
+import connectDB from "@/utils/mongoose";
+import Comment from "@/utils/models/comment.model";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
+
     const body = await req.json();
 
     const { content } = body;
@@ -40,21 +41,14 @@ export async function POST(req: NextRequest) {
 
 export async function GET(_request: NextRequest) {
   try {
-    console.log("HI2");
     await connectDB();
-    console.log("HI");
     const AllComments = await Comment.find();
-    console.log(await Comment.find());
-    console.log(AllComments);
-    console.log("Hi2");
-    // if (AllComments) {
-    //     return NextResponse.json({
-    //         message: "All Data Send",
-    //         AllComments
-    //     })
-    // }
-
-    return new Response(JSON.stringify(AllComments));
+    if (AllComments) {
+      return NextResponse.json({
+        message: "All Data Send",
+        AllComments,
+      });
+    }
   } catch (error) {
     return NextResponse.json(
       {
