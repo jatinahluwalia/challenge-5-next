@@ -7,17 +7,9 @@ interface Props {
   currentUserId: string;
   currentUserImage: string;
   username: string;
-  name: string;
-  email: string;
 }
 
-const Form = ({
-  currentUserId,
-  currentUserImage,
-  username,
-  name,
-  email,
-}: Props) => {
+const Form = ({ currentUserId, currentUserImage, username }: Props) => {
   type FormValues = {
     content: string;
   };
@@ -32,9 +24,6 @@ const Form = ({
   const onSubmit = async (values: FormValues) => {
     await addComment({
       owner: currentUserId,
-      email,
-      name,
-      currentUserImage,
       tag: username,
       replies: [],
       score: [],

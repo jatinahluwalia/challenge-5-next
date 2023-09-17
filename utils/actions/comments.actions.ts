@@ -7,18 +7,12 @@ import { fetchUser } from "./user.actions";
 
 export const addComment = async ({
   owner,
-  email,
-  name,
-  currentUserImage,
   tag,
   replies,
   score,
   content,
 }: {
   owner: string;
-  email: string;
-  name: string;
-  currentUserImage: string;
   tag: string;
   replies: any[];
   score: any[];
@@ -33,5 +27,10 @@ export const addComment = async ({
     tag,
     owner: user._id,
   });
-  User.findByIdAndUpdate(user._id, { $push: { comments: comment._id } });
+  await User.findByIdAndUpdate(user._id, { $push: { comments: comment._id } });
+};
+
+export const fetchComments = async () => {
+  connectDB();
+  return await Comment.find().populate({ path: "owner", model: User });
 };

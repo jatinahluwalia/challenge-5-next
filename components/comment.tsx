@@ -31,7 +31,7 @@ const Comment = ({
           width={15}
           height={15}
         />
-        <span className="font-bold text-moderate-blue">{score || 10}</span>
+        <span className="font-bold text-moderate-blue">{score}</span>
         <Image
           src={"/images/icon-minus.svg"}
           alt="minus"
@@ -42,13 +42,9 @@ const Comment = ({
       <div className="grow">
         <div className="flex gap-3 items-center justify-between">
           <div className="flex gap-5 items-center">
-            <ProfileAvatar
-              image={authorImage || "/images/avatars/image-amyrobson.png"}
-            />
-            <p className="text-dark-blue font-bold">
-              {username || "amyrobson"}
-            </p>
-            <p className="text-grayish-blue">{time || "1 week ago"}</p>
+            <ProfileAvatar image={authorImage as string} />
+            <p className="text-dark-blue font-bold">{username}</p>
+            <p className="text-grayish-blue">{time}</p>
           </div>
           <button className="flex gap-5 items-center text-moderate-blue font-bold">
             <Image
@@ -60,10 +56,7 @@ const Comment = ({
             <span>Reply</span>
           </button>
         </div>
-        <p className="text-grayish-blue mt-4">
-          {content ||
-            "Woah, your project looks awesome! How long have you been coding for? I'm still new, but think I want to dive into React as well soon. Perhaps you can give me an insight on where I can learn React? Thanks!"}
-        </p>
+        <p className="text-grayish-blue mt-4">{content}</p>
       </div>
     </article>
   );
