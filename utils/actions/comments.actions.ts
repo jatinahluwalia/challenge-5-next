@@ -5,6 +5,7 @@ import Comment from "../models/comment.model";
 import User from "../models/user.model";
 import connectDB from "../mongoose";
 import { fetchUser } from "./user.actions";
+import Replies from "../models/replies.model";
 
 export const addComment = async ({
   owner,
@@ -47,5 +48,10 @@ export const fetchComments = async () => {
   connectDB();
   return await Comment.find()
     .sort({ createdAt: -1 })
-    .populate({ path: "owner", model: User });
+    .populate({ path: "owner", model: User })
+    .populate({
+      path: "replies",
+      model: Replies,
+      populate: { path: "owner", model: User },
+    });
 };

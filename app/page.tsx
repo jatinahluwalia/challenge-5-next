@@ -19,9 +19,11 @@ const Home: NextPage = async () => {
     <main className="grow flex flex-col items-center justify-center max-h-screen relative">
       <div className="my-5">
         <SignedOut>
-          <button className="rounded-md py-3 px-8 bg-moderate-blue text-white h-max font-bold">
-            SIGN IN
-          </button>
+          <SignInButton>
+            <button className="rounded-md py-3 px-8 bg-moderate-blue text-white h-max font-bold">
+              SIGN IN
+            </button>
+          </SignInButton>
         </SignedOut>
         <SignedIn>
           <SignOutButton>
@@ -34,16 +36,39 @@ const Home: NextPage = async () => {
       <div className="grow w-[min(800px,100%)] flex flex-col relative overflow-y-hidden">
         <div className="grow overflow-y-auto flex flex-col gap-5 px-5 mb-5">
           {comments.map((comment) => (
-            <Comment
-              content={comment.content}
-              commentId={String(comment._id)}
-              username={comment.tag}
-              key={comment._id}
-              authorImage={comment.owner.image}
-              time={moment(comment.createdAt).fromNow()}
-              score={comment.score.length}
-              isOwner={comment.owner.id === user.id}
-            />
+            <>
+              <Comment
+                key={comment._id}
+                content={comment.content}
+                commentId={String(comment._id)}
+                username={comment.tag}
+                authorImage={comment.owner.image}
+                time={moment(comment.createdAt).fromNow()}
+                score={comment.score.length}
+                isOwner={comment.owner.id === user.id}
+                currentUserImage={user.imageUrl}
+                currentUserId={user.id}
+              />
+              {comment.replies.length
+                ? comment.replies.map((comment: any) => (
+                    <div className="flex" key={comment._id}>
+                      <div className="w-1 bg-light-gray mx-14" />
+                      <Comment
+                        key={comment._id}
+                        content={comment.content}
+                        commentId={String(comment._id)}
+                        username={comment.tag}
+                        authorImage={comment.owner.image}
+                        time={moment(comment.createdAt).fromNow()}
+                        score={comment.score.length}
+                        isOwner={comment.owner.id === user.id}
+                        currentUserImage={user.imageUrl}
+                        currentUserId={user.id}
+                      />
+                    </div>
+                  ))
+                : null}
+            </>
           ))}
         </div>
         <div className="mt-auto my-5">
@@ -51,6 +76,7 @@ const Home: NextPage = async () => {
             currentUserId={user.id}
             currentUserImage={user.imageUrl}
             username={user.firstName ? user.firstName : "username"}
+            type="send"
           />
         </div>
       </div>

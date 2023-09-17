@@ -54,10 +54,7 @@ export const POST = async (request: Request) => {
         image: evnt.data["image_url"] as string,
       });
 
-      return NextResponse.json(
-        { message: "Organization deleted" },
-        { status: 201 },
-      );
+      return NextResponse.json({ message: "User Created" }, { status: 201 });
     } catch (err) {
       console.log(err);
 

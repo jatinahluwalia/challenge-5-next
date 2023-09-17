@@ -1,18 +1,24 @@
 import mongoose from "mongoose";
 
-const repliesSchema = new mongoose.Schema({
+const repliesSchema = new mongoose.Schema(
+  {
     content: { type: String, required: true },
-    score: [{
+    score: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "user"
-    }],
+        ref: "user",
+      },
+    ],
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-    tag: {type: String}
-}, {
-    timestamps: true
-});
+    tag: { type: String },
+    commentId: { type: mongoose.Schema.Types.ObjectId, ref: "comment" },
+  },
+  {
+    timestamps: true,
+  },
+);
 
+const Replies =
+  mongoose.models.replies || mongoose.model("replies", repliesSchema);
 
-const Replies = mongoose.models.replies || mongoose.model("replies", repliesSchema);
-
-export default Replies
+export default Replies;

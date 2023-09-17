@@ -3,14 +3,23 @@
 import { addComment } from "@/utils/actions/comments.actions";
 import ProfileAvatar from "./profile-avatar";
 import { useForm } from "react-hook-form";
+import { addReply } from "@/utils/actions/replies.actions";
 
 interface Props {
   currentUserId: string;
   currentUserImage: string;
   username: string;
+  type: string;
+  commentId?: string;
 }
 
-const Form = ({ currentUserId, currentUserImage, username }: Props) => {
+const Form = ({
+  currentUserId,
+  currentUserImage,
+  username,
+  type,
+  commentId,
+}: Props) => {
   type FormValues = {
     content: string;
   };
@@ -21,17 +30,36 @@ const Form = ({ currentUserId, currentUserImage, username }: Props) => {
     handleSubmit,
     reset,
   } = useForm<FormValues>({
-    defaultValues: { content: "" },
+    defaultValues: { content: type === "reply" ? `@${username}` : "" },
   });
   const onSubmit = async (values: FormValues) => {
-    await addComment({
-      owner: currentUserId,
-      tag: username,
-      replies: [],
-      score: [],
-      content: values.content,
-    });
-    reset();
+    try {
+      switch (type) {
+        case "send": {
+          await addComment({
+            owner: currentUserId,
+            tag: username,
+            replies: [],
+            score: [],
+            content: values.content,
+          });
+          reset();
+          break;
+        }
+        case "reply": {
+          console.log({ currentUserId });
+          await addReply({
+            owner: currentUserId,
+            tag: username,
+            score: [],
+            content: values.content,
+            commentId: commentId as string,
+          });
+          reset();
+          break;
+        }
+      }
+    } catch (error) {}
   };
   return (
     <form
@@ -56,7 +84,7 @@ const Form = ({ currentUserId, currentUserImage, username }: Props) => {
         className="rounded-md py-3 px-8 bg-moderate-blue text-white h-max font-bold disabled:opacity-50"
         disabled={isSubmitting}
       >
-        SEND
+        {type.toUpperCase()}
       </button>
     </form>
   );
