@@ -32,15 +32,17 @@ const Home: NextPage = async () => {
         </SignedIn>
       </div>
       <div className="grow w-[min(800px,100%)] flex flex-col relative overflow-y-hidden">
-        <div className="grow overflow-y-auto flex flex-col gap-5 px-5">
+        <div className="grow overflow-y-auto flex flex-col gap-5 px-5 mb-5">
           {comments.map((comment) => (
             <Comment
               content={comment.content}
+              commentId={String(comment._id)}
               username={comment.tag}
               key={comment._id}
               authorImage={comment.owner.image}
               time={moment(comment.createdAt).fromNow()}
               score={comment.score.length}
+              isOwner={comment.owner.id === user.id}
             />
           ))}
         </div>

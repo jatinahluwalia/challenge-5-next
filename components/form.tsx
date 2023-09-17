@@ -3,6 +3,7 @@
 import { addComment } from "@/utils/actions/comments.actions";
 import ProfileAvatar from "./profile-avatar";
 import { useForm } from "react-hook-form";
+
 interface Props {
   currentUserId: string;
   currentUserImage: string;
@@ -15,9 +16,10 @@ const Form = ({ currentUserId, currentUserImage, username }: Props) => {
   };
 
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     register,
     handleSubmit,
+    reset,
   } = useForm<FormValues>({
     defaultValues: { content: "" },
   });
@@ -29,6 +31,7 @@ const Form = ({ currentUserId, currentUserImage, username }: Props) => {
       score: [],
       content: values.content,
     });
+    reset();
   };
   return (
     <form
@@ -49,7 +52,10 @@ const Form = ({ currentUserId, currentUserImage, username }: Props) => {
           errors.content?.message ? "border-red-600" : "border-light-gray"
         } grow rounded-md border-2 py-4 px-5`}
       />
-      <button className="rounded-md py-3 px-8 bg-moderate-blue text-white h-max font-bold">
+      <button
+        className="rounded-md py-3 px-8 bg-moderate-blue text-white h-max font-bold disabled:opacity-50"
+        disabled={isSubmitting}
+      >
         SEND
       </button>
     </form>

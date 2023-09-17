@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import Comment from "../models/comment.model";
 import User from "../models/user.model";
 import connectDB from "../mongoose";
@@ -28,9 +29,23 @@ export const addComment = async ({
     owner: user._id,
   });
   await User.findByIdAndUpdate(user._id, { $push: { comments: comment._id } });
+  revalidatePath("/");
+};
+export const deleteComment = async (id: string) => {
+  await connectDB();
+  const deletedComment = await Comment.findByIdAndDelete(id).populate({
+    path: "owner",
+    model: User,
+  });
+  await User.findByIdAndUpdate(deletedComment.owner._id, {
+    $pull: { comments: deletedComment._id },
+  });
+  revalidatePath("/");
 };
 
 export const fetchComments = async () => {
   connectDB();
-  return await Comment.find().populate({ path: "owner", model: User });
+  return await Comment.find()
+    .sort({ createdAt: -1 })
+    .populate({ path: "owner", model: User });
 };
