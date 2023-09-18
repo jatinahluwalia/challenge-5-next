@@ -4,7 +4,7 @@ let ifConnected = false;
 
 const connectDB = async () => {
   if (ifConnected) {
-    return console.log("Mongo Allready connected");
+    return console.log("Mongo already connected");
   }
   try {
     await mongoose.connect(process.env.MONGO_URI || "");

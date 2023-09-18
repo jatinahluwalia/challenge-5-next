@@ -15,6 +15,7 @@ import moment from "moment";
 const Home: NextPage = async () => {
   const [user, comments] = await Promise.all([currentUser(), fetchComments()]);
   if (!user) redirect("/sign-in");
+  if (!comments) return "There are no comments to show";
   return (
     <main className="grow flex flex-col items-center justify-center max-h-screen relative">
       <div className="my-5">
@@ -65,6 +66,7 @@ const Home: NextPage = async () => {
                         currentUserImage={user.imageUrl}
                         currentUserId={user.id}
                         className="grow"
+                        isReply
                       />
                     </div>
                   ))

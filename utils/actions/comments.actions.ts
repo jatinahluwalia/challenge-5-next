@@ -80,11 +80,21 @@ export const removeScore = async (commentId: string, userId: string) => {
   try {
     await connectDB();
     const user = await fetchUser(userId);
-    const removed = await Comment.findByIdAndUpdate(commentId, {
+    await Comment.findByIdAndUpdate(commentId, {
       $pull: { score: user._id },
     });
     revalidatePath("/");
   } catch (error: any) {
     throw new Error(`Error adding score: ${error.message}`);
+  }
+};
+
+export const updateComment = async (commentId: string, content: string) => {
+  try {
+    await connectDB();
+    await Comment.findByIdAndUpdate(commentId, { content: content });
+    revalidatePath("/");
+  } catch (error: any) {
+    throw new Error(`Error updating comment: ${error.message}`);
   }
 };

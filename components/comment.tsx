@@ -9,6 +9,10 @@ import {
 } from "@/utils/actions/comments.actions";
 import { HTMLAttributes, useState } from "react";
 import Form from "./form";
+import {
+  addReplyScore,
+  removeReplyScore,
+} from "@/utils/actions/replies.actions";
 
 interface Props extends HTMLAttributes<HTMLElement> {
   commentId: string;
@@ -21,6 +25,7 @@ interface Props extends HTMLAttributes<HTMLElement> {
   time: string;
   isOwner: boolean;
   currentUserImage?: string;
+  isReply?: boolean;
 }
 
 const Comment = ({
@@ -35,6 +40,7 @@ const Comment = ({
   isOwner,
   currentUserImage,
   className,
+  isReply,
   ...props
 }: Props) => {
   const [reply, setReply] = useState<boolean>(false);
@@ -54,16 +60,30 @@ const Comment = ({
   };
 
   const handleScorePlus = async () => {
-    setLoading(true);
-    const score = await addScore(commentId, currentUserId);
-    if (!score) alert("Score not added");
-    setLoading(false);
+    if (!isReply) {
+      setLoading(true);
+      const score = await addScore(commentId, currentUserId);
+      if (!score) alert("Score not added");
+      setLoading(false);
+    } else {
+      console.log("hi");
+      setLoading(true);
+      const score = await addReplyScore(commentId, currentUserId);
+      if (!score) alert("Score not added");
+      setLoading(false);
+    }
   };
 
   const handleScoreMinus = async () => {
-    setLoading(true);
-    await removeScore(commentId, currentUserId);
-    setLoading(false);
+    if (!isReply) {
+      setLoading(true);
+      await removeScore(commentId, currentUserId);
+      setLoading(false);
+    } else {
+      setLoading(true);
+      await removeReplyScore(commentId, currentUserId);
+      setLoading(false);
+    }
   };
   return (
     <>
@@ -156,6 +176,7 @@ const Comment = ({
           username={username}
           type="reply"
           commentId={commentId}
+          setReply={setReply}
         />
       ) : (
         update && (
@@ -164,6 +185,8 @@ const Comment = ({
             currentUserImage={currentUserImage as string}
             username={username}
             type="update"
+            commentId={commentId}
+            setUpdate={setUpdate}
           />
         )
       )}

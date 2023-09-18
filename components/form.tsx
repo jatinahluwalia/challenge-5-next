@@ -1,6 +1,6 @@
 "use client";
 
-import { addComment } from "@/utils/actions/comments.actions";
+import { addComment, updateComment } from "@/utils/actions/comments.actions";
 import ProfileAvatar from "./profile-avatar";
 import { useForm } from "react-hook-form";
 import { addReply } from "@/utils/actions/replies.actions";
@@ -11,6 +11,8 @@ interface Props {
   username: string;
   type: string;
   commentId?: string;
+  setReply?: React.Dispatch<React.SetStateAction<boolean>>;
+  setUpdate?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Form = ({
@@ -19,6 +21,8 @@ const Form = ({
   username,
   type,
   commentId,
+  setReply,
+  setUpdate,
 }: Props) => {
   type FormValues = {
     content: string;
@@ -47,7 +51,6 @@ const Form = ({
           break;
         }
         case "reply": {
-          console.log({ currentUserId });
           await addReply({
             owner: currentUserId,
             tag: username,
@@ -56,7 +59,13 @@ const Form = ({
             commentId: commentId as string,
           });
           reset();
+          setReply && setReply(false);
           break;
+        }
+        case "update": {
+          await updateComment(String(commentId), values.content);
+          reset();
+          setUpdate && setUpdate(false);
         }
       }
     } catch (error) {}
