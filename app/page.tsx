@@ -34,7 +34,7 @@ const Home: NextPage = async () => {
         </SignedIn>
       </div>
       <div className="grow w-[min(800px,100%)] flex flex-col relative overflow-y-hidden">
-        <div className="grow overflow-y-auto flex flex-col gap-5 px-5 mb-5">
+        <div className="grow overflow-y-auto flex flex-col px-5 gap-5 mb-5">
           {comments.map((comment) => (
             <>
               <Comment
@@ -64,6 +64,7 @@ const Home: NextPage = async () => {
                         isOwner={comment.owner.id === user.id}
                         currentUserImage={user.imageUrl}
                         currentUserId={user.id}
+                        className="grow"
                       />
                     </div>
                   ))

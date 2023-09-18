@@ -2,11 +2,15 @@
 
 import Image from "next/image";
 import ProfileAvatar from "./profile-avatar";
-import { deleteComment } from "@/utils/actions/comments.actions";
-import { useState } from "react";
+import {
+  addScore,
+  deleteComment,
+  removeScore,
+} from "@/utils/actions/comments.actions";
+import { HTMLAttributes, useState } from "react";
 import Form from "./form";
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLElement> {
   commentId: string;
   currentUserId: string;
   authorId?: string;
@@ -30,9 +34,12 @@ const Comment = ({
   time,
   isOwner,
   currentUserImage,
+  className,
+  ...props
 }: Props) => {
   const [reply, setReply] = useState<boolean>(false);
   const [update, setUpdate] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleDelete = async () => {
     await deleteComment(commentId);
@@ -45,15 +52,34 @@ const Comment = ({
   const handleUpdate = () => {
     setUpdate(true);
   };
+
+  const handleScorePlus = async () => {
+    setLoading(true);
+    const score = await addScore(commentId, currentUserId);
+    if (!score) alert("Score not added");
+    setLoading(false);
+  };
+
+  const handleScoreMinus = async () => {
+    setLoading(true);
+    await removeScore(commentId, currentUserId);
+    setLoading(false);
+  };
   return (
     <>
-      <article className="p-5 bg-white rounded-lg flex gap-7">
+      <article
+        className={`p-5 bg-white rounded-lg flex gap-7 ${className}`}
+        {...props}
+      >
         <div className="bg-very-light-gray rounded-lg p-4 flex flex-col justify-between gap-5 items-center">
           <Image
             src={"/images/icon-plus.svg"}
             alt="plus"
             width={15}
             height={15}
+            onClick={handleScorePlus}
+            role="button"
+            aria-disabled={loading}
           />
           <span className="font-bold text-moderate-blue">{score}</span>
           <Image
@@ -61,6 +87,9 @@ const Comment = ({
             alt="minus"
             width={15}
             height={15}
+            onClick={handleScoreMinus}
+            role="button"
+            aria-disabled={loading}
           />
         </div>
         <div className="grow">

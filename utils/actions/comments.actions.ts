@@ -45,13 +45,46 @@ export const deleteComment = async (id: string) => {
 };
 
 export const fetchComments = async () => {
-  connectDB();
-  return await Comment.find()
-    .sort({ createdAt: -1 })
-    .populate({ path: "owner", model: User })
-    .populate({
-      path: "replies",
-      model: Replies,
-      populate: { path: "owner", model: User },
+  try {
+    await connectDB();
+    return await Comment.find()
+      .sort({ createdAt: -1 })
+      .populate({ path: "owner", model: User })
+      .populate({
+        path: "replies",
+        model: Replies,
+        populate: { path: "owner", model: User },
+      });
+  } catch (error: any) {
+    throw new Error(`Error fetching comments: ${error.message}`);
+  }
+};
+
+export const addScore = async (commentId: string, userId: string) => {
+  try {
+    await connectDB();
+    const user = await fetchUser(userId);
+    const scoreExists = await Comment.find({ _id: commentId, score: user._id });
+    if (scoreExists.length) return false;
+    const added = await Comment.findByIdAndUpdate(commentId, {
+      $push: { score: user._id },
     });
+    revalidatePath("/");
+    if (added) return true;
+    return false;
+  } catch (error: any) {
+    throw new Error(`Error adding score: ${error.message}`);
+  }
+};
+export const removeScore = async (commentId: string, userId: string) => {
+  try {
+    await connectDB();
+    const user = await fetchUser(userId);
+    const removed = await Comment.findByIdAndUpdate(commentId, {
+      $pull: { score: user._id },
+    });
+    revalidatePath("/");
+  } catch (error: any) {
+    throw new Error(`Error adding score: ${error.message}`);
+  }
 };
