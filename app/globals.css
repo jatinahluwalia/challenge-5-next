@@ -3,3 +3,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .reply {
+        @apply grid;
+        grid-template-columns: 1fr 4fr;
+    }
+}

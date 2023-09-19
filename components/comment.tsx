@@ -26,6 +26,7 @@ interface Props extends HTMLAttributes<HTMLElement> {
   isOwner: boolean;
   currentUserImage?: string;
   isReply?: boolean;
+  replyId?: string;
 }
 
 const Comment = ({
@@ -41,11 +42,13 @@ const Comment = ({
   currentUserImage,
   className,
   isReply,
+  replyId,
   ...props
 }: Props) => {
   const [reply, setReply] = useState<boolean>(false);
   const [update, setUpdate] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [replyUpdate, setReplyUpdate] = useState<boolean>(false);
 
   const handleDelete = async () => {
     await deleteComment(commentId);
@@ -56,7 +59,7 @@ const Comment = ({
   };
 
   const handleUpdate = () => {
-    setUpdate(true);
+    isReply ? setReplyUpdate(true) : setUpdate(true);
   };
 
   const handleScorePlus = async () => {
@@ -68,7 +71,7 @@ const Comment = ({
     } else {
       console.log("hi");
       setLoading(true);
-      const score = await addReplyScore(commentId, currentUserId);
+      const score = await addReplyScore(String(replyId), currentUserId);
       if (!score) alert("Score not added");
       setLoading(false);
     }
@@ -81,7 +84,7 @@ const Comment = ({
       setLoading(false);
     } else {
       setLoading(true);
-      await removeReplyScore(commentId, currentUserId);
+      await removeReplyScore(String(replyId), currentUserId);
       setLoading(false);
     }
   };
@@ -178,15 +181,24 @@ const Comment = ({
           commentId={commentId}
           setReply={setReply}
         />
+      ) : update ? (
+        <Form
+          currentUserId={currentUserId as string}
+          currentUserImage={currentUserImage as string}
+          username={username}
+          type="update"
+          commentId={commentId}
+          setUpdate={setUpdate}
+        />
       ) : (
-        update && (
+        replyUpdate && (
           <Form
             currentUserId={currentUserId as string}
             currentUserImage={currentUserImage as string}
             username={username}
-            type="update"
-            commentId={commentId}
-            setUpdate={setUpdate}
+            type="reply-update"
+            commentId={replyId}
+            setReplyUpdate={setReplyUpdate}
           />
         )
       )}

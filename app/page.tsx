@@ -51,18 +51,19 @@ const Home: NextPage = async () => {
                 currentUserId={user.id}
               />
               {comment.replies.length
-                ? comment.replies.map((comment: any) => (
-                    <div className="flex" key={comment._id}>
-                      <div className="w-1 bg-light-gray mx-14" />
+                ? comment.replies.map((reply: any) => (
+                    <div className="reply" key={reply._id}>
+                      <div className="w-1 bg-light-gray mx-auto" />
                       <Comment
-                        key={comment._id}
-                        content={comment.content}
+                        key={reply._id}
+                        content={reply.content}
                         commentId={String(comment._id)}
-                        username={comment.tag}
-                        authorImage={comment.owner.image}
-                        time={moment(comment.createdAt).fromNow()}
-                        score={comment.score.length}
-                        isOwner={comment.owner.id === user.id}
+                        replyId={String(reply._id)}
+                        username={reply.tag}
+                        authorImage={reply.owner.image}
+                        time={moment(reply.updatedAt).fromNow()}
+                        score={reply.score.length}
+                        isOwner={reply.owner.id === user.id}
                         currentUserImage={user.imageUrl}
                         currentUserId={user.id}
                         className="grow"

@@ -52,3 +52,13 @@ export const removeReplyScore = async (commentId: string, userId: string) => {
     throw new Error(`Error adding score: ${error.message}`);
   }
 };
+
+export const updateReply = async (replyId: string, content: string) => {
+  try {
+    await connectDB();
+    await Replies.findByIdAndUpdate(replyId, { content });
+    revalidatePath("/");
+  } catch (error: any) {
+    throw new Error(`Error updating reply: ${error.message}`);
+  }
+};
